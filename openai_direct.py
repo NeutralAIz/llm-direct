@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from superagi.tools.base_tool import BaseTool
 import os
 from superagi.llms.openai import OpenAi
+from superagi.config.config import get_config
 
 class OpenAIDirectSchema(BaseModel):
     system: str = Field(
