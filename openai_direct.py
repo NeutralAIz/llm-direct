@@ -32,7 +32,7 @@ class OpenAIDirectTool(BaseTool):
     )
     args_schema: Type[OpenAIDirectSchema] = OpenAIDirectSchema
 
-    def _execute(self, system: str = "", message: str = "", data: str = "", model: str = ""):
+    def _execute(self, system: str = "", message: str = "", data: str = "", model: str = "gpt-3.5-turbo"):
         # Retrieve the API key from the environment variable or, if not set, the application's config
         api_key = os.environ.get("OPENAI_API_KEY", None) or get_config("OPENAI_API_KEY", "")
 
@@ -56,7 +56,7 @@ class OpenAIDirectTool(BaseTool):
         safety_cushion = 0.05
 
         # Get the number of tokens used by your messages
-        tokens_used = self.num_tokens_from_messages(messages, model=model)
+        tokens_used = self.num_tokens_from_messages(messages, model)
 
         # Calculate your safe max length as (1 + safety_cushion) * tokens_used
         max_length = int((1 + safety_cushion) * tokens_used)
@@ -74,7 +74,7 @@ class OpenAIDirectTool(BaseTool):
         
         return result['content']
     
-    def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613"):
+    def num_tokens_from_messages(self, messages, model: str ="gpt-3.5-turbo"):
         """Return the number of tokens used by a list of messages."""
         try:
             encoding = tiktoken.encoding_for_model(model)
@@ -96,10 +96,10 @@ class OpenAIDirectTool(BaseTool):
             tokens_per_name = -1  # if there's a name, the role is omitted
         elif "gpt-3.5-turbo" in model:
             print("Warning: gpt-3.5-turbo may update over time. Returning num tokens assuming gpt-3.5-turbo-0613.")
-            return num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613")
+            return elf.num_tokens_from_messages(messages, model="gpt-3.5-turbo-0613")
         elif "gpt-4" in model:
             print("Warning: gpt-4 may update over time. Returning num tokens assuming gpt-4-0613.")
-            return num_tokens_from_messages(messages, model="gpt-4-0613")
+            return self.num_tokens_from_messages(messages, model="gpt-4-0613")
         else:
             raise NotImplementedError(
                 f"""num_tokens_from_messages() is not implemented for model {model}. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens."""
