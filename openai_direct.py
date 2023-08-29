@@ -59,11 +59,14 @@ class OpenAIDirectTool(BaseTool):
         tokens_used = self.num_tokens_from_messages(messages, model)
 
         # Calculate your safe max length as (1 + safety_cushion) * tokens_used
-        max_length = int((1 + safety_cushion) * tokens_used)
+        estimated_length = int((1 + safety_cushion) * tokens_used)
 
         # Cap your max_length to the maximum model token limit if it exceeds it
         max_model_token_limit = get_config("MAX_MODEL_TOKEN_LIMIT")
-        max_length = min(max_length, max_model_token_limit)
+        max_length = max_model_token_limit - estimated_length
+
+        if max_length <= 0:
+            raise Exception(f"Error not enough tokens for reply.  Estimated token input:  {estimated_length}, Max Model Tokens: {max_model_token_limit}")
 
         # Perform the API call and return the results
         result = openai_api.chat_completion(messages, max_length)
@@ -74,7 +77,7 @@ class OpenAIDirectTool(BaseTool):
         
         return result['content']
     
-    
+
     def num_tokens_from_messages(self, messages, model: str ="gpt-3.5-turbo"):
         """Return the number of tokens used by a list of messages."""
         try:
