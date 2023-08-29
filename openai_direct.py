@@ -23,10 +23,10 @@ class OpenAIDirectSchema(BaseModel):
     )
     model: Optional[str] = Field(
         "gpt-3.5-turbo",
-        description="Which OpenAI Model to use:\nname: gpt-3.5-turbo description: 4k length, cheapest, default\nname: gpt-4 description: 8k length, smartest\nname: gpt-3.5-turbo-16k description: 16k length, longest",
+        description="Which OpenAI Model to use:\nname: gpt-3.5-turbo description: 4k length, cheapest, less creative, default\nname: gpt-4 description: 8k length, smartest, most creative\nname: gpt-3.5-turbo-16k description: 16k length, longest output, largest input",
     )
     decimal: Optional[decimal] = Field(
-        0.6,
+        None,
         description="Adjust the tempurature to increase or decrease randomness or creativity.  Range of 0 to 1.",
     )
     
