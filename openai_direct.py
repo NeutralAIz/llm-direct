@@ -6,6 +6,7 @@ import os
 from superagi.llms.openai import OpenAi
 import tiktoken
 from superagi.config.config import get_config
+import decimal
 
 class OpenAIDirectSchema(BaseModel):
     system: str = Field(
@@ -24,6 +25,10 @@ class OpenAIDirectSchema(BaseModel):
         "gpt-3.5-turbo",
         description="Which OpenAI Model to use:\nname: gpt-3.5-turbo description: 4k length, cheapest, default\nname: gpt-4 description: 8k length, smartest\nname: gpt-3.5-turbo-16k description: 16k length, longest",
     )
+    decimal: Optional[decimal] = Field(
+        0.6,
+        description="Adjust the tempurature to increase or decrease randomness or creativity.  Range of 0 to 1.",
+    )
     
 class OpenAIDirectTool(BaseTool):
     name = "OpenAI Direct Call Tool"
@@ -32,7 +37,7 @@ class OpenAIDirectTool(BaseTool):
     )
     args_schema: Type[OpenAIDirectSchema] = OpenAIDirectSchema
 
-    def _execute(self, system: str = "", message: str = "", data: str = "", model: str = "gpt-3.5-turbo"):
+    def _execute(self, system: str = "", message: str = "", data: str = "", model: str = "gpt-3.5-turbo", temperature: decimal = 0.6):
         # Retrieve the API key from the environment variable or, if not set, the application's config
         api_key = os.environ.get("OPENAI_API_KEY", None) or get_config("OPENAI_API_KEY", "")
 
@@ -40,7 +45,7 @@ class OpenAIDirectTool(BaseTool):
             raise Exception("OpenAI API Key not found in environment variables or application configuration.")
 
         # Initialize the OpenAi class with the API key and chosen model
-        openai_api = OpenAi(api_key=api_key, model=model)
+        openai_api = OpenAi(api_key=api_key, model=model, temperature=temperature)
 
         # Package the system and message inputs into the messages list format as needed by the Chat API
         messages = [
