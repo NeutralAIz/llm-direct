@@ -31,7 +31,7 @@ class OpenAIDirectTool(BaseTool):
     )
     args_schema: Type[OpenAIDirectSchema] = OpenAIDirectSchema
 
-    def _execute(self, system: str, message: str, data: str, model: str):
+    def _execute(self, system: str = "", message: str = "", data: str = "", model: str = ""):
         # Retrieve the API key from the environment variable or, if not set, the application's config
         api_key = os.environ.get("OPENAI_API_KEY", None) or get_config("OPENAI_API_KEY", "")
 
