@@ -30,31 +30,31 @@ class OpenAIDirectTool(BaseTool):
     )
     args_schema: Type[OpenAIDirectSchema] = OpenAIDirectSchema
 
-def _execute(self, system: str, message: str, data: str, model: str):
-    # Retrieve the API key from the environment variable or, if not set, the application's config
-    api_key = os.environ.get("OPENAI_API_KEY", None) or get_config("OPENAI_API_KEY", "")
+    def _execute(self, system: str, message: str, data: str, model: str):
+        # Retrieve the API key from the environment variable or, if not set, the application's config
+        api_key = os.environ.get("OPENAI_API_KEY", None) or get_config("OPENAI_API_KEY", "")
 
-    if not api_key:
-        raise Exception("OpenAI API Key not found in environment variables or application configuration.")
+        if not api_key:
+            raise Exception("OpenAI API Key not found in environment variables or application configuration.")
 
-    # Initialize the OpenAi class with the API key and chosen model
-    openai_api = OpenAi(api_key=api_key, model=model)
+        # Initialize the OpenAi class with the API key and chosen model
+        openai_api = OpenAi(api_key=api_key, model=model)
 
-    # Package the system and message inputs into the messages list format as needed by the Chat API
-    messages = [
-        {"role": "system", "content": system},
-        {"role": "user", "content": message}
-    ]
+        # Package the system and message inputs into the messages list format as needed by the Chat API
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": message}
+        ]
 
-    # If there is additional structured data, add it to the messages list as a user message
-    if data:
-        messages.append({"role": "user", "content": data})
+        # If there is additional structured data, add it to the messages list as a user message
+        if data:
+            messages.append({"role": "user", "content": data})
 
-    # Perform the API call and return the results
-    result = openai_api.chat_completion(messages)
-    
-    if "error" in result:
-        # There was an error with the API call, raise an exception
-        raise Exception(f"Error running OpenAI API: {result['error']}")
-    
-    return result['content']
+        # Perform the API call and return the results
+        result = openai_api.chat_completion(messages)
+        
+        if "error" in result:
+            # There was an error with the API call, raise an exception
+            raise Exception(f"Error running OpenAI API: {result['error']}")
+        
+        return result['content']
