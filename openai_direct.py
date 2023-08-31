@@ -56,7 +56,7 @@ class OpenAIDirectTool(BaseTool):
         if data:
             messages.append({"role": "user", "content": data})
 
-        # Configure a safety cushion. This is a certain percentile, let's say 20%, that you will hold on top of the tokens calculated from messages.
+        # Configure a safety cushion. This is a certain percentile, let's say 5%, that you will hold on top of the tokens calculated from messages.
         safety_cushion = 0.05
 
         # Get the number of tokens used by your messages
@@ -70,7 +70,7 @@ class OpenAIDirectTool(BaseTool):
         max_length = max_model_token_limit - estimated_length
 
         if max_length <= 0:
-            raise Exception(f"Error not enough tokens for reply.  Estimated token input:  {estimated_length}, Max Model Tokens: {max_model_token_limit}")
+            raise Exception(f"Error not enough tokens leftover for a reply.  Estimated token input:  {estimated_length}, Max Model Tokens: {max_model_token_limit}")
 
         # Perform the API call and return the results
         result = openai_api.chat_completion(messages, max_length)

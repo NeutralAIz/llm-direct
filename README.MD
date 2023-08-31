@@ -4,6 +4,9 @@
 
 # LLM Direct Toolkit Suite
 
+Ever find that the built in "Thinking" tool is too focused on thinking?  Want it to just act like the regular API you are already familiar with?
+
+
 The LLM Direct Toolkit Suite is a robust armory of tools designed to facilitate and enhance direct interaction with our Language Learning Model (LLM). This suite features the OpenAI Direct Call Tool, an innovative tool that establishes a direct line of communication to various models of the OpenAI GPT series.
 
 ## OpenAI Direct Call Tool
