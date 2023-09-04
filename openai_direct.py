@@ -18,7 +18,7 @@ class OpenAIDirectSchema(BaseModel):
     )
     data: Optional[str] = Field(
         None,
-        description="Structured data you would like to add in a seperate message, in the same thread",
+        description="The data you would like to add to the request that needs processing or adds context for the response",
     )
     model: Optional[str] = Field(
         "gpt-3.5-turbo",
